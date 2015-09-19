@@ -1,0 +1,175 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml"
+	xmlns:ui="http://java.sun.com/jsf/facelets"
+	xmlns:h="http://java.sun.com/jsf/html"
+	xmlns:f="http://java.sun.com/jsf/core"
+	xmlns:p="http://primefaces.org/ui"
+	xmlns:pe="http://primefaces.org/ui/extensions">
+
+<f:view>
+	<h:head>
+		<title>Matricula de Alumnos</title>
+		<style type="text/css">
+.ui-widget {
+	font-size: 90% !important;
+}
+</style>
+		<h1
+			style="text-align: center; color: gray; font-size: 30px; font-weight: bold">FRAMEWORK DE PERSISTENCIA --HIBERNATE--</h1>
+	</h:head>
+
+	<h:body>
+		<h:form id = "tiempo" >
+			<h:panelGrid columns="3" style="background-color: #66CC00 ;border-radius: 10px">
+					<h3>Tiempo de Ejecución: </h3>
+					<pe:timer widgetVar="timer" timeout="10000" forward="true"/> segundo/s
+			</h:panelGrid>
+		</h:form>
+		
+		
+		<h:form id="frmcargar">
+			<p:ajaxStatus onstart="PF('statusDialog').show()"
+				onsuccess="PF('statusDialog').hide()"/>
+	
+			<p:dialog widgetVar="statusDialog" modal="true" draggable="false" header="Aguarde..."
+				closable="false" resizable="false" showHeader="true">
+				<p:graphicImage name="/images/animacion.gif" />
+			</p:dialog>
+			
+			
+			
+			
+			<p:messages autoUpdate="true" />
+			
+			<h:panelGrid columns="7"
+				style=" border-radius: 10px; font-family: Verdana, Arial; font-weight:bold; padding-left: 40px; padding-right: 40px;background-color: lightblue">
+				
+				<p:commandButton value="Guardar" actionListener="#{matriculaBean.guardar()}"
+					update=":frmMostrar" onclick="PF('timer').restart()" onsuccess="PF('timer').pause()" />
+				<p:commandButton value="Modificar"
+					actionListener="#{matriculaBean.actualizar()}"
+					update=":frmMostrar"  onclick="PF('timer').restart()" onsuccess="PF('timer').pause()"/>
+				<p:commandButton value="Eliminar"
+					actionListener="#{matriculaBean.eliminar()}"
+					update=":frmMostrar"  onclick="PF('timer').restart()" onsuccess="PF('timer').pause()"/>
+				<p:outputLabel value="Generador de Espacio"
+					style="color: lightblue; font-weight: bold" />
+				<p:columnGroup>
+					<p:outputLabel value="SELECCIONE UNA CANTIDAD DE REGISTROS"
+						style="color: green; font-weight: bold" />
+					<p:selectOneRadio id="nro" value="#{matriculaBean.nrosel}"
+						style="color: gray;" required="true"
+						requiredMessage="Seleccione una Cantidad de Registros para Ejecutar la Accion">
+						<f:selectItem itemLabel="1.000" itemValue="1000" />
+						<f:selectItem itemLabel="3.000" itemValue="3000" />
+						<f:selectItem itemLabel="5.000" itemValue="5000" />
+					</p:selectOneRadio>
+
+				</p:columnGroup>
+
+			</h:panelGrid>
+
+		</h:form>
+
+		<p:spacer height="50" />
+		<h:form id="frmMostrar">
+			<p:dataTable id="dtDVDs" emptyMessage="No se encontraron registros"
+				value="#{matriculaBean.matris}" var="d"
+				style="text-align:center; font-weight: bold; padding-left: 40px; padding-right: 40px"
+				paginator="true" rows="10" pageLinks="10"
+				paginatorTemplate=" {FirstPageLink} {PreviousPageLink} {PageLinks} {NextPageLink} {LastPageLink}  Registros por página:  {RowsPerPageDropdown}"
+				rowsPerPageTemplate="10,30,50,100">
+				<f:facet name="header">
+					<h:outputText value="Registro de Alumnos" style="color: black" />
+				</f:facet>
+
+				<p:column sortBy="#{d.id}">
+					<f:facet name="header">
+						<h:outputText value="Id" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.id}" />
+				</p:column>
+
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Nombre/s" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.alumno.nombres}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Apellido/s" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.alumno.apellidos}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fecha de Nac." style="color: green"/>
+						
+					</f:facet>
+					<h:outputText value="#{d.alumno.fechanacimiento}" >
+					<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Genero" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.alumno.genero}" />
+				</p:column>
+
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Telefono" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.alumno.telefono}" />
+				</p:column>
+				
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Carrera" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.carrera.descripcion}" />
+				</p:column>
+				
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Monto" style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.monto}" />
+				</p:column>
+				
+				
+				<p:column>
+					<f:facet name="header">
+						<h:outputText value="Fecha de Mat." style="color: green" />
+					</f:facet>
+					<h:outputText value="#{d.fechamatricula}">
+					<f:convertDateTime pattern="dd/MM/yyyy"/>
+					</h:outputText>
+					
+				</p:column>
+				
+				<f:facet name="footer">
+
+					<h:outputText
+						value="Hay un total de #{matriculaBean.count} Alumno/s registrado/s en el sistema." />
+				</f:facet>
+
+			</p:dataTable>
+
+		</h:form>
+
+	</h:body>
+
+</f:view>
+
+
+</html>
